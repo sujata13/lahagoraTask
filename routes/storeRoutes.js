@@ -2,32 +2,27 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/auth');
-const storeController = require('../controllers/store');
+const storeController = require('../controllers/storesController');
+
+router.use(authMiddleware)
 
 // Routes for all stores
 router.route('/')
-  .get(storeController.getAllStores)
-  .post(storeController.createNewStore);
-
-// Routes for individual stores
-router.route('/:storeId')
-  .get(storeController.getStoreById)
-  .patch(authMiddleware.authenticateStore, storeController.updateStore)
-  .delete(authMiddleware.authenticateStore, storeController.deleteStore);
+  .post(storeController.register);
 
 // Route for store login
-router.post('/login', storeController.loginStore);
+router.post('/login', storeController.login);
 
 // Route for adding a product
-router.post('/products', authMiddleware.authenticateStore, storeController.addProduct);
+router.post('/products',  storeController.addProduct);
 
 // Route for updating a product
-router.patch('/products/:productId', authMiddleware.authenticateStore, storeController.updateProduct);
+router.patch('/products/:productId',  storeController.updateProduct);
 
 // Route for deleting a product
-router.delete('/products/:productId', authMiddleware.authenticateStore, storeController.deleteProduct);
+router.delete('/products/:productId', storeController.deleteProduct);
 
 // Route for getting list of all products
-router.get('/products', storeController.getAllProducts);
+router.get('/products', storeController.getProductsList);
 
 module.exports = router;
